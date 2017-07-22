@@ -13,4 +13,6 @@ Requires Commands module by Pinkie-Pie
 ## Instruction
 After making sure this module is enabled, load the target mob onto your screen and then kill it (strongly suggest you only hit that target mob). The killed mob huntingZoneId and templateId ids will be displayed on the console (command prompt) by default. Then just use it for warnme or whatever other module.
 
+If only killing the target mob is not possible, then just kill 2 or more of the same surrounding mobs and look for the id which is the odd one out or something.
+
 Remember to remove this module after you are done getting the ids
