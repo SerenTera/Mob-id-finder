@@ -31,26 +31,28 @@ module.exports = function mobidfinder(dispatch) {
 			command.message('Mob ID sysmsg enabled')
 	})
 	
-	dispatch.hook('S_SPAWN_NPC', 3, event => {
+	dispatch.hook('S_SPAWN_NPC', 5, event => {
 		if(enabled) {
-			idlist.push(event.huntingZoneId,event.templateId),
-			targetlist.push(event.id.low)
+			idlist.push(`${event.huntingZoneId}_${event.templateId}`),
+			targetlist.push(event.gameId.low)
 		}
 	})
 	
 	dispatch.hook('S_DESPAWN_NPC', 1,event => {
 		if(enabled && event.type===5) {
-			index=targetlist.indexOf(event.target.low)*2
-			if(index!==-2) {     
-				console.log('Monster id: huntingZoneId:' + idlist[index] +' templateId:'+idlist[index+1])
-				if(sysmsg) command.message('Monster id: huntingZoneId:' + idlist[index] +' templateId:'+idlist[index+1])
+			index=targetlist.indexOf(event.target.low)
+			if(index!==-1) {     
+				console.log('Monster id (huntingZoneId_templateId):'+idlist[index])
+				if(sysmsg) command.message('Monster id (huntingZoneId_templateId):'+idlist[index])
+				targetlist.splice(index,1)
+				idlist.splice(index,1)
 			}
 		}
 		else if(enabled && event.type===1) {
 			index=targetlist.indexOf(event.target.low)
 			if(index!==-1) {
-				targetlist.splice(index,1),
-				idlist.splice(index*2,2)
+				targetlist.splice(index,1)
+				idlist.splice(index,1)
 			}
 		}	
 	})
@@ -60,3 +62,4 @@ module.exports = function mobidfinder(dispatch) {
 		targetlist=[]
 	})
 }
+
