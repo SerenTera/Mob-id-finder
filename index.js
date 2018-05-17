@@ -31,7 +31,7 @@ module.exports = function mobidfinder(dispatch) {
 			command.message('Mob ID sysmsg enabled')
 	})
 	
-	dispatch.hook('S_SPAWN_NPC', 5, event => {
+	dispatch.hook('S_SPAWN_NPC', 8, event => {
 		if(enabled) {
 			idlist.push(`${event.huntingZoneId}_${event.templateId}`),
 			targetlist.push(event.gameId.low)
