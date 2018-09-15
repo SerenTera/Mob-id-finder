@@ -1,6 +1,8 @@
 # Mob-id-finder
 Easy way to find a mob's huntingZoneId and templateId by killing the mob
 
+If you know the name of the mob, you can find it easily from datacenter, or shinra's data files. Else use this if you have no idea whats the name of the mob
+
 Written quickly, might have bugs, but it should serve its purpose. Module is by default enabled, so change the defaults in index.js to avoid spamming your console, or better yet, remove module after you are done getting the ids.
 
 Requires Commands module by Pinkie-Pie
