@@ -38,9 +38,9 @@ module.exports = function mobidfinder(dispatch) {
 		}
 	})
 	
-	dispatch.hook('S_DESPAWN_NPC', 1,event => {
+	dispatch.hook('S_DESPAWN_NPC', 3,event => {
 		if(enabled && event.type===5) {
-			index=targetlist.indexOf(event.target.low)
+			index=targetlist.indexOf(event.gameId.low)
 			if(index!==-1) {     
 				console.log('Monster id (huntingZoneId_templateId):'+idlist[index])
 				if(sysmsg) command.message('Monster id (huntingZoneId_templateId):'+idlist[index])
@@ -49,7 +49,7 @@ module.exports = function mobidfinder(dispatch) {
 			}
 		}
 		else if(enabled && event.type===1) {
-			index=targetlist.indexOf(event.target.low)
+			index=targetlist.indexOf(event.gameId.low)
 			if(index!==-1) {
 				targetlist.splice(index,1)
 				idlist.splice(index,1)
@@ -57,7 +57,7 @@ module.exports = function mobidfinder(dispatch) {
 		}	
 	})
 	
-	dispatch.hook('S_LOAD_TOPO', 1,event => {
+	dispatch.hook('S_LOAD_TOPO', "raw",event => {
 		idlist=[],
 		targetlist=[]
 	})
