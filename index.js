@@ -1,65 +1,38 @@
-const Command = require('command')
-
 //Defaults
 let sysmsg=false, //display system messages for ids (Default false)  
 	enabled=true //default enable/disable module
 
 module.exports = function mobidfinder(dispatch) {
-	const command = Command(dispatch)
 	
-	let idlist=[],
-		targetlist=[],
-		index
+	let idlist=new Map()
 	
-	command.add('mobid', () => {
-		if(enabled) {
-			enabled=false,
-			command.message('Mob ID finder Disabled')
-		}
-		else
-			enabled=true,
-			command.message('Mob ID finder Enabled. Kill the mob and ids should be displayed.')
+	dispatch.command.add('mobid', () => {
+			enabled = !enabled
+			if(!enabled) idlist.clear()
+			dispatch.command.message(enabled ? 'Mob ID finder Enabled. Kill the mob and ids should be displayed.' : 'Mob ID finder Disabled')
 	})
 	
-	command.add('mobidsysmsg', () => {
-		if(sysmsg) {
-			sysmsg=false,
-			command.message('Mob ID sysmsg disabled')
-		}
-		else
-			sysmsg=true,
-			command.message('Mob ID sysmsg enabled')
+	dispatch.command.add('mobidsysmsg', () => {
+			sysmsg = !sysmsg
+			dispatch.command.message(`Mob ID sysmsg ${sysmsg ? 'enabled' :'disabled'}`)
 	})
 	
-	dispatch.hook('S_SPAWN_NPC', 9, event => {
-		if(enabled) {
-			idlist.push(`${event.huntingZoneId}_${event.templateId}`),
-			targetlist.push(event.gameId.low)
-		}
+	dispatch.hook('S_SPAWN_NPC', 10, event => {
+		if(enabled) idlist.set(event.gameId,`${event.huntingZoneId}_${event.templateId}`);
 	})
 	
 	dispatch.hook('S_DESPAWN_NPC', 3,event => {
 		if(enabled && event.type===5) {
-			index=targetlist.indexOf(event.gameId.low)
-			if(index!==-1) {     
-				console.log('Monster id (huntingZoneId_templateId):'+idlist[index])
-				if(sysmsg) command.message('Monster id (huntingZoneId_templateId):'+idlist[index])
-				targetlist.splice(index,1)
-				idlist.splice(index,1)
+			if(idlist.has(event.gameId)) {     
+				console.log(`Monster id (huntingZoneId_templateId): ${idlist.get(event.gameId)}`)
+				if(sysmsg) dispatch.command.message(`Monster id (huntingZoneId_templateId): ${idlist.get(event.gameId)}`)
+				idlist.delete(event.gameId)
 			}
-		}
-		else if(enabled && event.type===1) {
-			index=targetlist.indexOf(event.gameId.low)
-			if(index!==-1) {
-				targetlist.splice(index,1)
-				idlist.splice(index,1)
-			}
-		}	
+		}			
 	})
 	
 	dispatch.hook('S_LOAD_TOPO', "raw",event => {
-		idlist=[],
-		targetlist=[]
+		idlist.clear()
 	})
 }
 
